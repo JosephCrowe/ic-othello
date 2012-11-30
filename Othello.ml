@@ -1,7 +1,7 @@
 type colour = BLACK | WHITE
 type piece = colour option
 
-class board size =
+class board (size : int) =
     object (self)
         val pieces : piece array array
             = Array.make_matrix size size None
