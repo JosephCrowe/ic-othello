@@ -38,10 +38,9 @@ class humanPlayer (name : string) (givenColour : colour) =
             let inputs = read_line () in
             match Str.split (Str.regexp_string ",") inputs with
             | [x; y] ->
-                begin try
-                    (int_of_string x, int_of_string y)
-                with Failure _ ->
-                    self#getMoveFail
+                begin
+                    try (int_of_string x, int_of_string y)
+                    with Failure _ -> self#getMoveFail
                 end
             | _ -> self#getMoveFail
         
@@ -50,7 +49,3 @@ class humanPlayer (name : string) (givenColour : colour) =
             self#getMove
     end;;
 
-let h = new humanPlayer "You" WHITE in
-match h#getMove with
-    (x, y) ->
-        print_endline ("(" ^ string_of_int x ^ ", " ^ string_of_int y ^ ")")
