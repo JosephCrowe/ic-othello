@@ -1,17 +1,26 @@
 open Colour
 open Board
 open Player
+open Game
 
-class virtual gameInterface =
-    object (self)
+class virtual gameInterface (theGame : game) =
+    object (self : #gameListener)
+        initializer
+            theGame#listen self
+
+        method start
+            = theGame#start
+    
         method virtual gameUpdate : board -> unit
 
         method virtual gameOver : player -> unit
+
+        method virtual gameDrawn : unit
     end;;
 
-class consoleGameInterface =
+class consoleGameInterface theGame =
     object (self)
-        inherit gameInterface
+        inherit gameInterface theGame
 
         method gameUpdate theBoard =
             let pad n str = String.make (n - String.length str) ' ' ^ str in
@@ -39,5 +48,8 @@ class consoleGameInterface =
             done;
 
         method gameOver winPlayer =
-            print_endline (winPlayer#getName ^ " wins.")
+            print_endline ("Game over: " ^ winPlayer#getName ^ " wins.")
+
+        method gameDrawn =
+            print_endline ("Game over: the game ends in a draw.")
     end;;

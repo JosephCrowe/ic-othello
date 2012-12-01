@@ -1,4 +1,5 @@
 open Colour
+open Board
 
 class virtual player (name : string) (givenColour : colour) =
     object (self)        
@@ -12,22 +13,24 @@ class virtual player (name : string) (givenColour : colour) =
     end;;
 
 class humanPlayer (name : string) (givenColour : colour) =
-    object(self)
+    object (self)
         inherit player name givenColour
         
         method getMove =
-            print_string (name ^ ", enter your move as 'row, column': ");
+            print_string (name ^ ", enter your move as 'column, row': ");
             let inputs = read_line () in
             match Str.split (Str.regexp_string ",") inputs with
             | [x; y] ->
                 begin
-                    try (int_of_string x, int_of_string y)
-                    with Failure _ -> self#getMoveFail
+                    match (strToCol x, strToRow y) with
+                    |   (Some x, Some y)    -> (x, y)
+                    |   _                   -> self#getMoveFail
                 end
             | _ -> self#getMoveFail
         
         method getMoveFail =
-            print_endline "Please enter your move as two integers separated by a comma.";
+            print_endline
+                "Please enter your move as a column name then a comma then a row name.";
             self#getMove
     end;;
 
