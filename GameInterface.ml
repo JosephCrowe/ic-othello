@@ -14,7 +14,7 @@ class consoleGameInterface =
         inherit gameInterface
 
         method gameUpdate theBoard =
-            let pad n str = str ^ String.make (n - String.length str) ' ' in
+            let pad n str = String.make (n - String.length str) ' ' ^ str in
 
             let size = theBoard#getSize in
             let rowHeads = Array.init size rowToStr in
