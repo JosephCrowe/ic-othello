@@ -1,4 +1,4 @@
-SRCS=Colour.ml Board.ml Player.ml GameInterface.ml
+SRCS=Colour.ml Board.ml Player.ml GameInterface.ml Test.ml
 
 Othello: $(SRCS)
 	ocamlc str.cma $(SRCS) -o Othello
