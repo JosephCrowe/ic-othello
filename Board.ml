@@ -1,3 +1,7 @@
+open Colour
+
+type piece = colour option
+
 class board (size : int) =
     object (self)
         val pieces : piece array array
@@ -17,14 +21,31 @@ class board (size : int) =
             size
     end;;
 
-let colToStr x : int -> string =
-    "";;
+let colToStr (x : int) : string =
+    if 0 <= x && x <= 25 then
+        String.make 1 (Char.chr (x + Char.code 'a'))
+    else invalid_arg "The column number must be in [0, 25]."
+;;
 
-let rowToStr y : int -> string =
-    "";;
+let rowToStr (y : int) : string =
+    if y >= 0 then string_of_int (y + 1)
+    else invalid_arg "The row number must be non-negative."
+;;
 
-let strToRow x : string -> int =
-    0;;
+let strToCol (x : string) : int option =
+    if String.length x = 1 then
+        let x = x.[0] in
+        if 'a' <= x && x <= 'z' then
+            Some (Char.code x - Char.code 'a')
+        else None
+    else None
+;;
 
-let strToCol y : string -> int option =
-    0;;
+let strToRow (y : string) : int option =
+    try
+        let y = int_of_string y in
+        if y > 0 then
+            Some (y - 1)
+        else None
+    with Failure "int_of_string" -> None
+;;

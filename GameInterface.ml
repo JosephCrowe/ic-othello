@@ -1,8 +1,12 @@
+open Colour
+open Board
+open Player
+
 class virtual gameInterface =
     object (self)
-        method virtual gameUpdate : Board.board -> unit
+        method virtual gameUpdate : board -> unit
 
-        method virtual gameOver : Othello.player -> unit
+        method virtual gameOver : player -> unit
     end;;
 
 class consoleGameInterface =
@@ -14,9 +18,9 @@ class consoleGameInterface =
             for x = 0 to maxIndex do
                 for y = 0 to maxIndex do
                     match theBoard#getPiece x y with
-                    |   None                -> print_string ". "
-                    |   Some Othello.WHITE  -> print_string "o "
-                    |   Some Othello.BLACK  -> print_string "x "
+                    |   None        -> print_string ". "
+                    |   Some WHITE  -> print_string "o "
+                    |   Some BLACK  -> print_string "x "
                 done
             done
         
