@@ -1,6 +1,6 @@
 class virtual gameInterface =
     object (self)
-        method virtual gameUpdate : Othello.board -> unit
+        method virtual gameUpdate : Board.board -> unit
 
         method virtual gameOver : Othello.player -> unit
     end;;
