@@ -1,5 +1,7 @@
-Othello: Othello.ml GameInterface.ml
-	ocamlc str.cma Othello.ml GameInterface.ml -o Othello
+SRCS=Colour.ml Board.ml Player.ml GameInterface.ml Test.ml
+
+Othello: $(SRCS)
+	ocamlc str.cma $(SRCS) -o Othello
 
 clean:
 	rm -f *.cmi *.cmo Othello
