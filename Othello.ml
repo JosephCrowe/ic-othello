@@ -2,6 +2,7 @@ open Player
 open HumanPlayer
 open Board
 open Game
+open ConsoleGame
 open Colour
 
 class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) =
@@ -19,9 +20,8 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
                     (fun (x,y) -> (x+1,y-1))
                  |];    
         
-        method gameEnd = ()
-        
         method start =
+            self#gameUpdate currentBoard;
             self#keepCount player1 player2 0
             
         method keepCount currentPlayer nextPlayer count =
@@ -30,12 +30,15 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
                 begin
                     match self#move currentPlayer nextPlayer with
                     |   []  ->  self#keepCount nextPlayer currentPlayer (count+1)
-                    |   xs  ->  self#flipForAllPairs xs currentPlayer nextPlayer
+                    |   xs  ->
+                            self#flipForAllPairs xs currentPlayer nextPlayer;
+                            self#gameUpdate currentBoard;
+                            self#keepCount nextPlayer currentPlayer 0;
                 end
         
         method flipForAllPairs pairsOfPairs currentPlayer nextPlayer =
             match pairsOfPairs with
-            |   []           ->   self#keepCount nextPlayer currentPlayer 0   
+            |   []           ->   ()   
             |   (p1,p2)::ps  ->   self#flipInbetweeners p1 p2 (Some currentPlayer#getColour);
                                   self#flipForAllPairs ps currentPlayer nextPlayer
                 
@@ -44,7 +47,7 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
                 let moves = self#getPossibleMoves
                     (Some currentPlayer#getColour) (Some nextPlayer#getColour) in
                 match moves with
-                | []    -> self#move nextPlayer currentPlayer
+                | []    -> []
                 | x::xs ->
                     let rec loop () =
                         let theMove = currentPlayer#getMove in
@@ -52,9 +55,19 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
                        	|   [] ->
                        	        currentPlayer#invalidMove;
                        	        loop ()
-                       	|   zs -> zs
+                       	|   zs ->
+                       	        self#printing zs;
+                       	        zs
                     in loop ()
-                    
+        
+        
+        method printing l =
+            match l with
+            | [] -> print_newline ()
+            | ((a,b),(c,d)) :: xs ->
+                    Printf.printf "(%s,%s),(%s,%s); "
+                        (colToStr a) (rowToStr b) (colToStr c) (rowToStr d);
+                    self#printing xs
             
         method getPossibleMoves currentPiece oppositePiece=
             let results = ref [] in
@@ -63,9 +76,10 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
                     if (currentBoard#getPiece (x,y) = None) then
                         begin
                             for i = 0 to 7 do
-                                let (l,m) = self#checkDirection i (x,y) (fs.(i) (x,y)) currentPiece oppositePiece in
-                                    if ((x,y) != (l,m)) then
-                                        results := ((x,y), (l,m)) :: results.contents
+                                if currentBoard#getPieceNone (fs.(i) (x,y)) = oppositePiece then 
+                                    let (l,m) = self#checkDirection i (x,y) (fs.(i) (x,y)) currentPiece oppositePiece in
+                                        if ((x,y) <> (l,m)) then
+                                            results := ((x,y), (l,m)) :: results.contents
                             done    
                         end
                 done
@@ -84,12 +98,13 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
                 end
         
         method add (x1,y1) (x2,y2) = (x1  +x2 , y1 + y2)
-            
+        
+        (*  *)
         method adderUnit (a,b) (c,d) =
             if (a = c && b = d) then (0,0)
-            else if (a = c)     then (0 , (d-b)/(d-b))
-            else if (b = d)        then ((c-a)/(c-a) , 0)
-            else                     ((c-a)/(c-a) , (d-b)/(d-b))
+            else if (a = c)     then (0 , abs(d-b)/(d-b))
+            else if (b = d)        then (abs(c-a)/(c-a) , 0)
+            else                     (abs(c-a)/(c-a) , abs(d-b)/(d-b))
                 
         method checkDirection i (x,y) (l,m) playerPiece opponentPiece=
             if (l < 0 || l > 7 || m < 0 || m > 7)
@@ -104,10 +119,10 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
     end;;                
                 
 print_string "Enter Player 1's name: ";
-let player1Name = read_line () in
+let player1Name = "Player1" (*read_line ()*) in
 print_string "Enter Player 2's name: ";
-let player2Name = read_line () in
-print_endline (player1Name ^ ", please choose your colour as 'black' or 'white'");
+let player2Name = "Player2" (*read_line ()*) in
+(*print_endline (player1Name ^ ", please choose your colour as 'black' or 'white'");
 
 let rec readColour () =
     match read_line () with
@@ -118,10 +133,13 @@ in
 
 let player1Colour = readColour () in
 let player2Colour = if player1Colour = BLACK then WHITE else BLACK in
-
+*)
+let (player1Colour, player2Colour) = (BLACK, WHITE) in
 let player1 = new humanPlayer player1Name player1Colour in
 let player2 = new humanPlayer player2Name player2Colour in
 let currentBoard = new board 8 in
 let currentGame = new twoPlayersGame player1 player2 currentBoard in
 
-currentGame#start
+let interface = new consoleGame currentGame in
+interface#start
+
