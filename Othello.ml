@@ -5,9 +5,11 @@ open Game
 open ConsoleGame
 open Colour
 
-class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) =
+class twoPlayersGame (player1 : player) (player2 : player) (currentBoard : board) =
     object(self)
         inherit game 
+        
+        val boardSize = currentBoard#getSize
         
         val fs = [| 
                     (fun (x,y) -> (x+1,y)) ;
@@ -19,17 +21,34 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
                     (fun (x,y) -> (x,y-1)) ;
                     (fun (x,y) -> (x+1,y-1))
                  |];    
-        
+                
         method start =
             self#gameUpdate currentBoard;
             self#keepCount player1 player2 0
-            
+
+        method gameEnd =
+            let noOfPlayer1s, noOfPlayer2s = ref 0, ref 0 in
+            let player1Piece = Some player1#getColour in
+            let player2Piece = Some player2#getColour in
+            for x = 0 to boardSize - 1 do
+                for y = 0 to boardSize - 1 do
+                    if currentBoard#getPiece (x,y) = player1Piece then noOfPlayer1s := noOfPlayer1s.contents + 1
+                    else if currentBoard#getPiece (x,y) = player2Piece then noOfPlayer2s := noOfPlayer2s.contents + 1
+                done
+            done;
+            match noOfPlayer1s.contents - noOfPlayer2s.contents with
+            | diff when diff > 0 -> self#gameWon player1
+            | diff when diff < 0 -> self#gameWon player2
+            | _                  -> self#gameDrawn
+                    
+                    
         method keepCount currentPlayer nextPlayer count =
             if count = 2 then self#gameEnd
             else
                 begin
                     match self#move currentPlayer nextPlayer with
-                    |   []  ->  self#keepCount nextPlayer currentPlayer (count+1)
+                    |   []  ->  self#gameSkip currentPlayer;
+                                self#keepCount nextPlayer currentPlayer (count+1)
                     |   xs  ->
                             self#flipForAllPairs xs currentPlayer nextPlayer;
                             self#gameUpdate currentBoard;
@@ -71,8 +90,8 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
             
         method getPossibleMoves currentPiece oppositePiece=
             let results = ref [] in
-            for x = 0 to 7 do
-                for y = 0 to 7 do
+            for x = 0 to boardSize - 1 do
+                for y = 0 to boardSize - 1 do
                     if (currentBoard#getPiece (x,y) = None) then
                         begin
                             for i = 0 to 7 do
@@ -107,7 +126,7 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
             else                     (abs(c-a)/(c-a) , abs(d-b)/(d-b))
                 
         method checkDirection i (x,y) (l,m) playerPiece opponentPiece=
-            if (l < 0 || l > 7 || m < 0 || m > 7)
+            if (l < 0 || l > boardSize - 1 || m < 0 || m > boardSize - 1)
                 then (x,y)
             else if (currentBoard#getPiece (l,m) = playerPiece)
                 then (l,m)
@@ -137,7 +156,7 @@ let player2Colour = if player1Colour = BLACK then WHITE else BLACK in
 let (player1Colour, player2Colour) = (BLACK, WHITE) in
 let player1 = new humanPlayer player1Name player1Colour in
 let player2 = new humanPlayer player2Name player2Colour in
-let currentBoard = new board 8 in
+let currentBoard = new board 4 in
 let currentGame = new twoPlayersGame player1 player2 currentBoard in
 
 let interface = new consoleGame currentGame in
