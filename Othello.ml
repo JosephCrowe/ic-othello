@@ -1,9 +1,8 @@
 open Player
+open HumanPlayer
 open Board
 open Game
-
-type colour = BLACK | WHITE
-type piece = colour option  
+open Colour
 
 class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) =
     object(self)
@@ -105,9 +104,9 @@ class twoPlayersGame (player1 :player) (player2 :player) (currentBoard : board) 
     end;;                
                 
 print_string "Enter Player 1's name: ";
-let player1Name = new humanPlayer (read_line ()) in
+let player1Name = read_line () in
 print_string "Enter Player 2's name: ";
-let player2Name = new humanPlayer (read_line ()) in
+let player2Name = read_line () in
 print_endline (player1Name ^ ", please choose your colour as 'black' or 'white'");
 
 let rec readColour () =
