@@ -52,7 +52,7 @@ class twoPlayersGame (player1 : player) (player2 : player) (currentBoard : board
             | _                  -> self#gameDrawn
      
                     
-        (* Calls gameEnd when both players don't have any viable move *)
+        (* Calls gameEnd when both the players don't have any viable move available *)
         method private keepCount currentPlayer nextPlayer count =
             if count = 2 then self#gameEnd
             else
