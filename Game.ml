@@ -1,13 +1,15 @@
 open Board
 open Player
 
-class type gameListener =
+class virtual gameListener =
     object
-        method gameUpdate : board -> unit
+        method virtual gameUpdate : board -> unit
 
-        method gameWon : player -> unit
+        method virtual gameSkip : player -> unit
+
+        method virtual gameWon : player -> unit
         
-        method gameDrawn : unit
+        method virtual gameDrawn : unit
     end;;
 
 class virtual game =
@@ -21,6 +23,9 @@ class virtual game =
         
         method gameUpdate theBoard =
             List.iter (fun l -> l#gameUpdate theBoard) listeners
+
+        method gameSkip thePlayer =
+            List.iter (fun l -> l#gameSkip thePlayer) listeners
 
         method gameWon thePlayer =
             List.iter (fun l -> l#gameWon thePlayer) listeners
