@@ -21,6 +21,10 @@ class board (size : int) =
         method getPiece (x, y) =
             pieces.(x).(y)            
 
+        method getPieceOption at =
+            try Some (self#getPiece at)
+            with Invalid_argument _ -> None
+
         method getSize =
             size
     end;;
