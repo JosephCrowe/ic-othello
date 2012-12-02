@@ -15,5 +15,5 @@ class virtual game =
             listeners <- (listener :> gameListener) :: listeners
         
         method gameUpdate theBoard =
-            List.iter (fun listener -> listener#update theBoard) listeners
+            List.iter (fun listener -> listener#gameUpdate theBoard) listeners
     end

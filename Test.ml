@@ -8,12 +8,13 @@ open Board
 class testGame =
     object (self)
         val thePlayer = new humanPlayer "Joseph" BLACK
-        val theBoard = new board
+        val theBoard = new board 16
         inherit game
         method start =
+            self#gameUpdate theBoard;
             let move = thePlayer#getMove in
-            theBoard#setPiece move thePlayer#getColour;
-            self#gameUpdate
+            theBoard#setPiece move (Some thePlayer#getColour);
+            self#start
     end;;
 
 (new consoleGameInterface (new testGame))#start
