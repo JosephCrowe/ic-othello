@@ -1,7 +1,16 @@
+(*******************************************************************************
+ *  HumanPlayer module: contains the humanPlayer class.
+ *)
+
 open Player
 open Colour
 open Board
 
+(*******************************************************************************
+ *  An interface to a human player who enters their moves through standard
+ *  input and reads feedback from standard output. Multiple human players with
+ *  different names may play simultaneously without ambiguity.
+ *)
 class humanPlayer (name : string) (givenColour : colour) =
     object (self)
         inherit player name givenColour
@@ -11,7 +20,8 @@ class humanPlayer (name : string) (givenColour : colour) =
             print_newline ();
             move
 
-        method private readMove =            
+        (* Like getMove, but does not print a trailing newline. *)
+        method private readMove =
             print_string (name ^ ", enter your move as 'column, row': ");
             let inputs = read_line () in
             match Str.split (Str.regexp_string ",") inputs with
@@ -23,6 +33,7 @@ class humanPlayer (name : string) (givenColour : colour) =
                 end
             | _ -> self#readMoveFail
 
+        (* The player has entered an invalid move. *)
         method private readMoveFail =
             print_endline
                 "Please enter your move as a column name then a comma then a row name.";

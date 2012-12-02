@@ -1,7 +1,14 @@
+(*******************************************************************************
+ *  ConsoleGame module: contains the consoleGame class.
+ *)
 open GameInterface
 open Colour
 open Board
 
+(*******************************************************************************
+ *  Presents the state changes of the underlying game in a human-readable text
+ *  format through standard output.
+ *)
 class consoleGame theGame =
     object (self)
         inherit gameInterface theGame
