@@ -1,23 +1,15 @@
-OTHELLO_SRCS=\
-	Othello.ml
+MAIN_SRCS=Colour.ml Board.ml Player.ml Game.ml GameInterface.ml
+EXTRA_SRCS=str.cma
 
-MAIN_SRCS=\
-	Colour.ml Board.ml Player.ml Game.ml GameInterface.ml
+BINS=Othello ConsoleTest
 
-GAMEINTERFACETEST_SRCS=\
-	$(MAIN_SRCS) GameInterfaceTest.ml
-
-EXTRA_SRCS=\
-	str.cma
-
-BINS=\
-	Othello GameInterfaceTest
-
+OTHELLO_SRCS=Othello.ml
 Othello: $(OTHELLO_SRCS)
 	ocamlc $(EXTRA_SRCS) $(OTHELLO_SRCS) -o Othello
 
-GameInterfaceTest: $(GAMEINTERFACETEST_SRCS)
-	ocamlc $(EXTRA_SRCS) $(GAMEINTERFACETEST_SRCS) -o GameInterfaceTest
+CONSOLETEST_SRCS=$(MAIN_SRCS) ConsoleGame.ml HumanPlayer.ml ConsoleTest.ml
+ConsoleTest: $(GAMEINTERFACETEST_SRCS)
+	ocamlc $(EXTRA_SRCS) $(CONSOLETEST_SRCS) -o ConsoleTest
 
 clean:
 	rm -f *.cmi *.cmo $(BINS)

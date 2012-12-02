@@ -1,9 +1,8 @@
-open GameInterface
+open HumanPlayer
+open ConsoleGame
 open Board
-open Game
-open Player
 open Colour
-open Board
+open Game
 
 class testGame =
     object (self)
@@ -27,4 +26,4 @@ class testGame =
                 self#getMove            
     end;;
 
-(new consoleGameInterface (new testGame))#start
+(new consoleGame (new testGame))#start
