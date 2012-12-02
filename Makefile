@@ -1,8 +1,8 @@
-OTHELLO_SRCS=\
-	Othello.ml
-
 MAIN_SRCS=\
 	Colour.ml Board.ml Player.ml Game.ml GameInterface.ml
+
+OTHELLO_SRCS=\
+	 $(MAIN_SRCS) Othello.ml
 
 GAMEINTERFACETEST_SRCS=\
 	$(MAIN_SRCS) GameInterfaceTest.ml
