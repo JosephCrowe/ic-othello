@@ -13,7 +13,7 @@ class virtual gameInterface (theGame : game) =
     
         method virtual gameUpdate : board -> unit
 
-        method virtual gameOver : player -> unit
+        method virtual gameWon : player -> unit
 
         method virtual gameDrawn : unit
     end;;
@@ -46,10 +46,14 @@ class consoleGameInterface theGame =
                 done;
                 print_newline ()
             done;
+            
+            print_newline ()
 
-        method gameOver winPlayer =
-            print_endline ("Game over: " ^ winPlayer#getName ^ " wins.")
+        method gameWon thePlayer =
+            print_endline ("Game over: " ^ thePlayer#getName ^ " wins.");
+            print_newline ()
 
         method gameDrawn =
-            print_endline ("Game over: the game ends in a draw.")
+            print_endline ("Game over: the game ends in a draw.");
+            print_newline ()
     end;;

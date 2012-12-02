@@ -1,9 +1,14 @@
 open Board
+open Player
 
 class type gameListener =
     object
         method gameUpdate : board -> unit
-    end
+
+        method gameWon : player -> unit
+        
+        method gameDrawn : unit
+    end;;
 
 class virtual game =
     object
@@ -15,5 +20,11 @@ class virtual game =
             listeners <- (listener :> gameListener) :: listeners
         
         method gameUpdate theBoard =
-            List.iter (fun listener -> listener#gameUpdate theBoard) listeners
-    end
+            List.iter (fun l -> l#gameUpdate theBoard) listeners
+
+        method gameWon thePlayer =
+            List.iter (fun l -> l#gameWon thePlayer) listeners
+        
+        method gameDrawn =
+            List.iter (fun l -> l#gameDrawn) listeners
+    end;;
