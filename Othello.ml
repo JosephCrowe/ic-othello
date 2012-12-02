@@ -7,14 +7,17 @@ open Colour
 
 let add (x1,y1) (x2,y2) = (x1 + x2 , y1 + y2);;
         
-(* Implements the game Othello with standard rules for a Two-player game on a single board *)
+(*******************************************************************************
+ *  Implements the game Othello with standard rules for a Two-player game on
+ *  a single board
+ *)
 class twoPlayersGame (player1 : player) (player2 : player) (currentBoard : board) =
     object(self)
         inherit game 
         
         val boardSize = currentBoard#getSize
 
-	(* An array of functions that translate points in 2-D as described below *)        
+	    (* An array of functions that translate points in 2-D as described below *)        
         val translations = [| 
                     (fun (x,y) -> (x+1,y)) ;
                     (fun (x,y) -> (x+1,y+1)) ;
@@ -32,7 +35,7 @@ class twoPlayersGame (player1 : player) (player2 : player) (currentBoard : board
             self#keepCount player1 player2 0
 
 
-	(* Ends the game when called *)
+	    (* Ends the game when called *)
         method private gameEnd =
             let noOfPlayer1s, noOfPlayer2s = ref 0, ref 0 in
             let player1Piece = Some player1#getColour in
@@ -77,7 +80,7 @@ class twoPlayersGame (player1 : player) (player2 : player) (currentBoard : board
         (*
         An addable unit pair to add to a point to make it's transltion in the
         method flipInbetweeners
-	*)
+	    *)
         method private adderUnit (a,b) (c,d) =
             if (a = c && b = d) then (0,0)
             else if (a = c)     then (0 , abs(d-b)/(d-b))
@@ -137,7 +140,7 @@ class twoPlayersGame (player1 : player) (player2 : player) (currentBoard : board
             done;
             results.contents
 
-	(*
+	    (*
         Helper method for getAllPossibleMoves, returns the second point to
         make a pair, given a point and direction
         *)        
@@ -159,10 +162,10 @@ class twoPlayersGame (player1 : player) (player2 : player) (currentBoard : board
             
                 
 print_string "Enter Player 1's name: ";
-let player1Name = "Player1" (*read_line ()*) in
+let player1Name = read_line () in
 print_string "Enter Player 2's name: ";
-let player2Name = "Player2" (*read_line ()*) in
-(*print_endline (player1Name ^ ", please choose your colour as 'black' or 'white'");
+let player2Name = read_line () in
+print_endline (player1Name ^ ", please choose your colour as 'black' or 'white'");
 
 let rec readColour () =
     match read_line () with
@@ -173,11 +176,10 @@ in
 
 let player1Colour = readColour () in
 let player2Colour = if player1Colour = BLACK then WHITE else BLACK in
-*)
-let (player1Colour, player2Colour) = (BLACK, WHITE) in
+
 let player1 = new humanPlayer player1Name player1Colour in
 let player2 = new humanPlayer player2Name player2Colour in
-let currentBoard = new board 4 in
+let currentBoard = new board 8 in
 let currentGame = new twoPlayersGame player1 player2 currentBoard in
 
 let interface = new consoleGame currentGame in
