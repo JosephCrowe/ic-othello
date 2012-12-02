@@ -8,6 +8,6 @@ Test: $(TEST_SRCS)
 	ocamlc str.cma $(TEST_SRCS) -o Test
 
 clean:
-	rm -f *.cmi *.cmo Othello
+	rm -f *.cmi *.cmo Othello Test
 
 .phony: clean
