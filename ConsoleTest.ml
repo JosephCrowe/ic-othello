@@ -1,9 +1,18 @@
+(*******************************************************************************
+ *  Tests the consoleGame and humanPlayer classes with a trivial implementation
+ *  of the game class.
+ *)
+
 open HumanPlayer
 open ConsoleGame
 open Board
 open Colour
 open Game
 
+(*******************************************************************************
+ *  A game of Othello where a single player places black pieces at arbitrary
+ *  locations on the board.
+ *)
 class testGame =
     object (self)
         inherit game
