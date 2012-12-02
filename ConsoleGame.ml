@@ -35,7 +35,8 @@ class consoleGame theGame =
 
         method gameSkip thePlayer =
             print_endline (thePlayer#getName ^ "'s turn is skipped "
-                ^ "because they have no legal moves.")
+                ^ "because they have no legal moves.");
+            print_newline ()
 
         method gameWon thePlayer =
             print_endline ("Game over: " ^ thePlayer#getName ^ " wins.");
