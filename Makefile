@@ -3,7 +3,7 @@ EXTRA_SRCS=str.cma
 
 BINS=Othello ConsoleTest
 
-OTHELLO_SRCS=$(MAIN_SRCS) ConsoleGame.ml HumanPlayer.ml Othello.ml
+OTHELLO_SRCS=$(MAIN_SRCS) ConsoleGame.ml HumanPlayer.ml TwoPlayersGame.ml Othello.ml
 Othello: $(OTHELLO_SRCS)
 	ocamlc $(EXTRA_SRCS) $(OTHELLO_SRCS) -o Othello
 

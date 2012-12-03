@@ -14,20 +14,16 @@ class board (size : int) =
     object (self)
         val pieces : piece array array
             = Array.make_matrix size size None
-            
+
         initializer
             if size <= 2 || size mod 2 != 0 then
                 invalid_arg "Size must be greater than 2 and even.";
-            self#setPiece (size/2, size/2) (Some WHITE);
-            self#setPiece (size/2 - 1, size/2 - 1) (Some WHITE);
-            self#setPiece (size/2 - 1, size/2) (Some BLACK);
-            self#setPiece (size/2, size/2 - 1) (Some BLACK)
 
         method setPiece (x, y) givenPiece =
             pieces.(x).(y) <- givenPiece
 
         method getPiece (x, y) =
-            pieces.(x).(y)            
+            pieces.(x).(y)
 
         method getPieceNone at =
             try self#getPiece at
@@ -36,6 +32,17 @@ class board (size : int) =
         method getSize =
             size
     end;;
+
+(*******************************************************************************
+ * Constructs and returns a board with the standard starting pattern.
+ *)
+let standardBoard (size : int) =
+    let theBoard = new board size in
+    theBoard#setPiece (size/2, size/2) (Some WHITE);
+    theBoard#setPiece (size/2 - 1, size/2 - 1) (Some WHITE);
+    theBoard#setPiece (size/2 - 1, size/2) (Some BLACK);
+    theBoard#setPiece (size/2, size/2 - 1) (Some BLACK);
+    theBoard
 
 (*******************************************************************************
  *  A human-readable representation of the given zero-based column number.
